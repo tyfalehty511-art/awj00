@@ -1,0 +1,117 @@
+
+{
+  "entities": {
+    "Store": {
+      "title": "Store",
+      "description": "Merchant store information including SEO, branding, layout settings, and shipping integrations.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "subdomain": { "type": "string" },
+        "custom_domain": { "type": "string" },
+        "owner_uid": { "type": "string" },
+        "logo_url": { "type": "string" },
+        "hero_image_url": { "type": "string" },
+        "brand_headline": { "type": "string" },
+        "store_description": { "type": "string" },
+        "meta_title": { "type": "string" },
+        "meta_description": { "type": "string" },
+        "navigation_menu": { 
+          "type": "array", 
+          "items": { "type": "string" },
+          "default": ["الرئيسية"]
+        },
+        "theme_primary": { "type": "string", "default": "#6168F0" },
+        "theme_accent": { "type": "string", "default": "#6BCEF5" },
+        "template_choice": { "type": "string", "enum": ["modern", "classic", "bold", "luxury", "magazine", "retro"], "default": "modern" },
+        "visible_sections": { 
+          "type": "array", 
+          "items": { "type": "string" },
+          "default": ["hero", "products", "social"]
+        },
+        "layout_style": { "type": "string", "enum": ["grid", "list"], "default": "grid" },
+        "button_radius": { "type": "number", "default": 12 },
+        "animation_style": { "type": "string", "enum": ["fade", "slide", "none"], "default": "fade" },
+        "background_pattern": { "type": "string", "enum": ["none", "dots", "grid", "geometric"], "default": "none" },
+        "header_blur": { "type": "boolean", "default": true },
+        "logo_pulse": { "type": "boolean", "default": false },
+        "verification_status": { 
+          "type": "string", 
+          "enum": ["none", "pending", "verified", "rejected"],
+          "default": "none"
+        },
+        "shipping_settings": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "enum": ["fixed", "free", "weight_based"] },
+            "fixed_rate": { "type": "number" },
+            "free_shipping_threshold": { "type": "number" }
+          }
+        },
+        "shipping_integrations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "account_number": { "type": "string" },
+              "api_key": { "type": "string" },
+              "location_id": { "type": "string" },
+              "is_active": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "required": ["name", "subdomain", "owner_uid"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product in the store.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "price": { "type": "number" },
+        "type": { "type": "string", "enum": ["physical", "digital", "voucher", "service"] },
+        "store_category": { "type": "string" },
+        "description": { "type": "string" },
+        "image_url": { "type": "string" },
+        "file_url": { "type": "string" },
+        "is_digital": { "type": "boolean" },
+        "weight": { "type": "number" },
+        "dimensions": { "type": "string" },
+        "stock": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "price", "type"]
+    },
+    "DomainOrder": {
+      "title": "Domain Order",
+      "description": "Information about a domain purchase and its status.",
+      "type": "object",
+      "properties": {
+        "domain_name": { "type": "string" },
+        "owner_uid": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["paid_pending_registration", "completed", "failed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["domain_name", "owner_uid", "amount", "status"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password"]
+  },
+  "firestore": {
+    "/stores/{storeId}": {
+      "schema": "Store",
+      "description": "Merchant store"
+    },
+    "/stores/{storeId}/products/{productId}": {
+      "schema": "Product",
+      "description": "Store products"
+    },
+    "/domain_orders/{orderId}": {
+      "schema": "DomainOrder",
+      "description": "Customer domain purchase records"
+    }
+  }
+}
